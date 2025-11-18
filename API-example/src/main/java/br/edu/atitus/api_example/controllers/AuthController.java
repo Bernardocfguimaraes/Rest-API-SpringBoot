@@ -2,12 +2,17 @@ package br.edu.atitus.api_example.controllers;
 
 import org.springframework.beans.BeanUtils;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
+import org.springframework.security.config.annotation.authentication.configuration.AuthenticationConfiguration;
+import org.springframework.security.core.AuthenticationException;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
+import br.edu.atitus.api_example.components.JwtUtil;
+import br.edu.atitus.api_example.dtos.SigninDTO;
 import br.edu.atitus.api_example.dtos.SignupDTO;
 import br.edu.atitus.api_example.entities.TypeUser;
 import br.edu.atitus.api_example.entities.UserEntity;
@@ -18,11 +23,13 @@ import br.edu.atitus.api_example.services.UserService;
 public class AuthController {
 	
 	private final UserService service;
+	private final AuthenticationConfiguration authConfig;
 	
 	
-	public AuthController(UserService service) {
+	public AuthController(UserService service, AuthenticationConfiguration authConfig) {
 		super();
 		this.service = service;
+		this.authConfig = authConfig;
 	}
 
 	@PostMapping("/signup")
@@ -34,6 +41,13 @@ public class AuthController {
 		service.save(user);
 		
 		return ResponseEntity.status(201).body(user);
+	}
+	
+	@PostMapping("/signin")
+	public ResponseEntity<String> signin(@RequestBody SigninDTO dto) throws AuthenticationException, Exception {
+		authConfig.getAuthenticationManager().authenticate(new UsernamePasswordAuthenticationToken(dto.email(), dto.password()));
+		String  jwt = JwtUtil.generateToken(dto.email());
+		return ResponseEntity.ok(jwt);
 	}
 	
 	@ExceptionHandler(Exception.class)
