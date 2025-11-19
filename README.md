@@ -1,5 +1,5 @@
 API REST - Spring Boot Example
-Este projeto é uma API REST desenvolvida em Java com Spring Boot (pacote br.edu.atitus), focada em demonstrar a implementação de segurança com Spring Security e JWT (JSON Web Token).
+Este projeto é uma API REST desenvolvida em Java com Spring Boot focada em demonstrar a implementação de segurança com Spring Security e JWT (JSON Web Token).
 
 Tecnologias Utilizadas
 Java
