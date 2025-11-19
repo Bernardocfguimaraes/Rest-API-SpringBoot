@@ -2,6 +2,8 @@ package br.edu.atitus.api_example.entities;
 
 import java.util.UUID;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
+
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.FetchType;
@@ -29,6 +31,7 @@ public class PointEntity {
 	@Column(columnDefinition = "decimal(17,14)", nullable =false)
 	private double longitude;
 	
+	@JsonIgnore
 	@JoinColumn(name = "iduser")
 	@ManyToOne(fetch = FetchType.LAZY)
 	private UserEntity user;
