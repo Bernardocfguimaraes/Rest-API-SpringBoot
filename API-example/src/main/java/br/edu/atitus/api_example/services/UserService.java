@@ -22,6 +22,11 @@ public class UserService implements UserDetailsService {
 		this.repository = repository;
 		this.encoder = encoder;
 	}
+	
+	public UserEntity findByEmail(String email) {
+        return repository.findByEmail(email)
+                .orElseThrow(() -> new UsernameNotFoundException("Usuário não encontrado com este e-mail"));
+    }
 
 	public UserEntity save(UserEntity user) throws Exception {
 		if (user == null)

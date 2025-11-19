@@ -23,6 +23,7 @@ public class ConfigSecurity {
 	      .csrf(csrf -> csrf.disable())
 	        .authorizeHttpRequests(auth -> auth
 	        	.requestMatchers(HttpMethod.OPTIONS).permitAll()
+	        	.requestMatchers("/api/auth/**").authenticated()
 	            .requestMatchers("/ws**", "/ws/**").authenticated()
 	            .anyRequest().permitAll())
 	        .addFilterBefore(authTokenFilter, UsernamePasswordAuthenticationFilter.class);
