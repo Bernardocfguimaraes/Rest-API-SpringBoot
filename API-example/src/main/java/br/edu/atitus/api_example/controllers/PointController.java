@@ -1,5 +1,6 @@
 package br.edu.atitus.api_example.controllers;
 
+import java.security.Principal; 
 import java.util.List;
 import java.util.UUID;
 
@@ -10,6 +11,7 @@ import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.PutMapping; 
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
@@ -21,29 +23,46 @@ import br.edu.atitus.api_example.services.PointService;
 @RestController
 @RequestMapping("/ws/point")
 public class PointController {
+    
 	private final PointService service;
 
 	public PointController(PointService service) {
-		super();
 		this.service = service;
+		
 	}
 	
 	@GetMapping
-	public ResponseEntity<List<PointEntity>> findAll(){
-		var list = service.findAll();
+	public ResponseEntity<List<PointEntity>> listarPontosPorUsuario(Principal principal){
+		var list = service.listarPorUsuario(principal.getName()); 
 		return ResponseEntity.ok(list);
 	}
 	
+
 	@PostMapping
 	public ResponseEntity<PointEntity> save(@RequestBody PointDTO dto) throws Exception{
 		PointEntity point = new PointEntity();
 		BeanUtils.copyProperties(dto, point);
-		service.save(point);
+		
+		service.save(point); 
 		return ResponseEntity.status(201).body(point);
+	}
+	
+	@PutMapping("/{id}")
+	public ResponseEntity<PointEntity> atualizarPonto(
+	    @PathVariable UUID id,
+	    @RequestBody PointDTO dto,
+	    Principal principal 
+	) throws Exception {
+	    PointEntity novoPonto = new PointEntity();
+	    BeanUtils.copyProperties(dto, novoPonto);
+	    
+	    PointEntity pontoAtualizado = service.atualizar(id, novoPonto, principal.getName());
+	    return ResponseEntity.ok(pontoAtualizado);
 	}
 	
 	@DeleteMapping("/{id}")
 	public ResponseEntity<String> delete(@PathVariable UUID id) throws Exception{
+
 		service.deleteById(id);
 		return ResponseEntity.ok("Ponto Deletado");
 	}

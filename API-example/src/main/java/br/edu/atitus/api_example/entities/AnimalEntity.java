@@ -16,7 +16,6 @@ public class AnimalEntity {
     private String especie; 
     private String descricao;
     
-    // Caminho da foto no servidor
     private String fotoPath; 
 
     private boolean isAdotado = false; 
@@ -25,19 +24,13 @@ public class AnimalEntity {
     private double latitude;
     private double longitude; 
     
-    // --- RELACIONAMENTO DE ADOÇÃO ---
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "adotante_id")
-    @JsonIgnore // Essencial para evitar o erro ByteBuddyInterceptor
+    @JsonIgnore 
     private UserEntity adotante;
 
-    // Construtor padrão (necessário pelo JPA)
     public AnimalEntity() {
     }
-
-    // ==========================================================
-    // GETTERS E SETTERS
-    // ==========================================================
     
     public UUID getId() {
         return id;
