@@ -23,9 +23,11 @@ public class ConfigSecurity {
 	      .csrf(csrf -> csrf.disable())
 	        .authorizeHttpRequests(auth -> auth
 	        	.requestMatchers(HttpMethod.OPTIONS).permitAll()
-	        	.requestMatchers("/api/auth/**").authenticated()
-	            .requestMatchers("/ws**", "/ws/**").authenticated()
-	            .anyRequest().permitAll())
+	        	.requestMatchers("/auth/**").permitAll() 
+	            .requestMatchers("/ws**", "/ws/**").authenticated() 
+	            .requestMatchers("/api/**").authenticated()
+	            .anyRequest().authenticated())
+	            
 	        .addFilterBefore(authTokenFilter, UsernamePasswordAuthenticationFilter.class);
 
 	    return http.build();
@@ -47,14 +49,4 @@ public class ConfigSecurity {
 			
 		};
 	}
-	
-	
-	
-	
-	
-	
-	
-	
-	
 }
-
